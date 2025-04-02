@@ -19,7 +19,6 @@ export default function App(){
     checkAuth();
   },[checkAuth])
 
-  console.log(authUser)
 
   if(isCheckingAuth && !authUser){
     return(
