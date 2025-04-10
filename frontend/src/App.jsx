@@ -13,11 +13,12 @@ import {Toaster} from "react-hot-toast"
 
 
 export default function App(){
-  const {checkAuth,authUser,isCheckingAuth}=useAuthStore();
+  const {checkAuth,authUser,isCheckingAuth,socket,onlineUsers}=useAuthStore();
   const {theme}=useThemeStore();
-
+  console.log(onlineUsers)
   useEffect(()=>{
     checkAuth();
+    console.log("hi:",socket)
   },[checkAuth])
 
 
