@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast"
 import { axiosInstance } from "../lib/axios";
+import { useAuthStore } from "./useAuthStore";
 
 
 export const useChatStore = create((set,get)=>({
@@ -48,8 +49,28 @@ export const useChatStore = create((set,get)=>({
         }
     },
 
+    listenToMessages: ()=>{
+        const {selectedUser}=get();
+        if(!selectedUser)return;
 
-    //todo:optimize this one later
+        const socket = useAuthStore.getState().socket
+
+
+        socket.on("newMessage",(newMessage)=>{
+            //jo user select kia hai usko display karna na socket coz when we send the sender is okay , usak wahi update hus but the receiver has to get the result tha is why the selcted user ,thatis recevier is thats id now equalto message.senderID tah mean thhe messwaw was not for lselected suer, think this in context fo teh person receiging , it has selected teh sender ,t aht is who'll send the message , so its , that is th emessge sender id shoudl be eqlt o slec teduse id
+            const isMessageSentFromSelectedUser= newMessage.senderId===selectedUser._id
+            if(!isMessageSentFromSelectedUser)return;
+            console.log(newMessage)
+            console.log(selectedUser)
+            set({messages:[...get().messages,newMessage]})
+        })
+    },
+
+    stopListeningToMessages:()=>{
+        const socket = useAuthStore.getState().socket
+        socket.off("newMessage")
+    },
+
     setSelectedUser:(selectedUser)=>{
         set({selectedUser})
     },
